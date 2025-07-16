@@ -1,13 +1,15 @@
 idf_component_register(
     SRCS 
         "main.c"
-        "hardware_config.c"
-        "motor_control.c"
-        "sun_tracking.c"
-        "storage.c"
-        "ota.c"
-        "web_server.c"
-    INCLUDE_DIRS "."
+        "source/hardware_config.c"
+        "source/motor_control.c"
+        "source/sun_tracking.c"
+        "source/storage.c"
+        "source/ota.c"
+        "source/web_server.c"
+    INCLUDE_DIRS 
+        "."
+        "Include"
     REQUIRES
         esp_eth
         esp_netif

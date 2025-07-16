@@ -3,6 +3,8 @@
 
 #include <stdbool.h>
 #include <stdint.h>
+#include "freertos/FreeRTOS.h"
+#include "freertos/task.h"
 
 // Function prototypes
 void calculate_sun_position(float *azimuth, float *elevation);
@@ -12,7 +14,7 @@ void stow_task(void *arg);
 void raise_legs_task(void *arg);
 void drop_legs_task(void *arg);
 
-// Global state variables
+// Global state variables (extern declarations)
 extern bool auto_tracking;
 extern bool time_synced;
 extern bool tracking_in_progress;

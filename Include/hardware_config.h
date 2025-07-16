@@ -4,6 +4,8 @@
 #include "driver/gpio.h"
 #include "driver/ledc.h"
 #include "driver/pulse_cnt.h"
+#include "driver/i2c_master.h"
+#include "esp_err.h"
 
 // MCP23017 I2C Configuration
 #define I2C_MASTER_SCL_IO      GPIO_NUM_0
@@ -99,5 +101,12 @@ typedef struct {
 extern motor_config_t motors[11];
 extern motor_state_t motor_states[11];
 extern sync_state_t sync_state;
+
+// Global hardware resources
+extern i2c_master_dev_handle_t mcp_handle;
+extern i2c_master_bus_handle_t i2c_bus;
+
+// Hardware function declarations
+esp_err_t mcp23017_write(uint8_t reg, uint8_t value);
 
 #endif // HARDWARE_CONFIG_H

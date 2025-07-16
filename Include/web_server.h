@@ -2,6 +2,7 @@
 #define WEB_SERVER_H
 
 #include "esp_http_server.h"
+#include "esp_err.h"
 
 // Function prototypes
 void web_server_init(void);

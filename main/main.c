@@ -26,10 +26,14 @@ i2c_master_dev_handle_t mcp_handle = NULL;
 SemaphoreHandle_t hardware_mutex = NULL;
 static esp_timer_handle_t heartbeat_timer = NULL;
 
-// MCP23017 write function (needed by multiple modules)
+// MCP23017 write function
 esp_err_t mcp23017_write(uint8_t reg, uint8_t value) {
     uint8_t data[2] = {reg, value};
-    return i2c_master_transmit(mcp_handle, data, 2, 1000);
+    esp_err_t ret = i2c_master_transmit(mcp_handle, data, 2, 1000);
+    if (ret != ESP_OK) {
+        ESP_LOGE(TAG, "MCP23017 write failed: %s", esp_err_to_name(ret));
+    }
+    return ret;
 }
 
 static void heartbeat_timer_callback(void *arg) {
@@ -106,11 +110,17 @@ static void ethernet_init(void) {
 }
 
 void app_main(void) {
-    // Initialize storage
+    ESP_LOGI(TAG, "Starting LACS2 v2.0");
+    
+    // Initialize storage first
     storage_init();
     
     // Create mutex
     hardware_mutex = xSemaphoreCreateMutex();
+    if (hardware_mutex == NULL) {
+        ESP_LOGE(TAG, "Failed to create hardware mutex");
+        return;
+    }
     
     // Initialize I2C
     i2c_master_bus_config_t i2c_bus_config = {
@@ -121,7 +131,12 @@ void app_main(void) {
         .glitch_ignore_cnt = 7,
         .flags.enable_internal_pullup = true,
     };
-    ESP_ERROR_CHECK(i2c_new_master_bus(&i2c_bus_config, &i2c_bus));
+    
+    esp_err_t ret = i2c_new_master_bus(&i2c_bus_config, &i2c_bus);
+    if (ret != ESP_OK) {
+        ESP_LOGE(TAG, "I2C bus initialization failed: %s", esp_err_to_name(ret));
+        return;
+    }
     
     // Initialize MCP23017
     i2c_device_config_t mcp_cfg = {
@@ -129,7 +144,12 @@ void app_main(void) {
         .device_address = MCP23017_ADDR,
         .scl_speed_hz = I2C_MASTER_FREQ_HZ,
     };
-    ESP_ERROR_CHECK(i2c_master_bus_add_device(i2c_bus, &mcp_cfg, &mcp_handle));
+    
+    ret = i2c_master_bus_add_device(i2c_bus, &mcp_cfg, &mcp_handle);
+    if (ret != ESP_OK) {
+        ESP_LOGE(TAG, "MCP23017 device add failed: %s", esp_err_to_name(ret));
+        return;
+    }
     
     // Configure MCP23017 ports
     mcp23017_write(MCP23017_IODIRA, 0x68);  // A3, A5, A6 as inputs
