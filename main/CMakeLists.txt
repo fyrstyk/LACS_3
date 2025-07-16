@@ -1,0 +1,30 @@
+idf_component_register(
+    SRCS 
+        "main.c"
+        "hardware_config.c"
+        "motor_control.c"
+        "sun_tracking.c"
+        "storage.c"
+        "ota.c"
+        "web_server.c"
+    INCLUDE_DIRS "."
+    REQUIRES
+        esp_eth
+        esp_netif
+        esp_http_server
+        nvs_flash
+        driver
+        freertos
+        json
+        esp_timer
+        spi_flash
+        esp_wifi
+        esp_https_server
+        app_update
+        esp_system
+        lwip
+        esp_app_format
+        esp_bootloader_format
+    PRIV_REQUIRES
+        mqtt
+)
