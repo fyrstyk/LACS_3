@@ -2,6 +2,8 @@
 #define OTA_H
 
 #include "esp_http_server.h"
+#include "esp_ota_ops.h"
+#include "esp_partition.h"
 
 // OTA upload structure
 typedef struct {

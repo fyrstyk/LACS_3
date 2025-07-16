@@ -1,15 +1,15 @@
 idf_component_register(
     SRCS 
         "main.c"
-        "source/hardware_config.c"
-        "source/motor_control.c"
-        "source/sun_tracking.c"
-        "source/storage.c"
-        "source/ota.c"
-        "source/web_server.c"
+        "../source/hardware_config.c"
+        "../source/motor_control.c"
+        "../source/sun_tracking.c"
+        "../source/storage.c"
+        "../source/ota.c"
+        "../source/web_server.c"
     INCLUDE_DIRS 
         "."
-        "Include"
+        "../Include"
     REQUIRES
         esp_eth
         esp_netif
@@ -17,7 +17,6 @@ idf_component_register(
         nvs_flash
         driver
         freertos
-        json
         esp_timer
         spi_flash
         esp_wifi
@@ -25,8 +24,6 @@ idf_component_register(
         app_update
         esp_system
         lwip
-        esp_app_format
-        esp_bootloader_format
     PRIV_REQUIRES
         mqtt
 )
